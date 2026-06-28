@@ -1,0 +1,125 @@
+.downloads-page{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+.downloads-header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.downloads-header h1{
+    color:#1e3a8a;
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.downloads-header p{
+    color:#64748b;
+}
+
+.downloads-list{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.download-card{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    box-shadow:0 8px 25px rgba(15,23,42,.08);
+    transition:.3s;
+}
+
+.download-card:hover{
+    transform:translateY(-4px);
+}
+
+.pdf-icon{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    background:#fee2e2;
+    color:#dc2626;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+}
+
+.download-info{
+    flex:1;
+}
+
+.download-info h2{
+    color:#0f172a;
+    margin-bottom:12px;
+}
+
+.download-info p{
+    color:#64748b;
+    margin:8px 0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.download-actions{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.download-actions button{
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:.3s;
+}
+
+.view-btn{
+    background:#1e3a8a;
+    color:white;
+}
+
+.view-btn:hover{
+    background:#1d4ed8;
+}
+
+.download-btn{
+    background:#2563eb;
+    color:white;
+}
+
+.download-btn:hover{
+    background:#1d4ed8;
+}
+
+@media(max-width:900px){
+
+.download-card{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.download-actions{
+width:100%;
+flex-direction:row;
+}
+
+.download-actions button{
+flex:1;
+}
+
+}

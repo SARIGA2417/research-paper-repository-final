@@ -1,0 +1,88 @@
+.mypapers {
+  min-height: 100vh;
+  background: #F8FAFC;
+  padding: 70px 8%;
+}
+
+.mypapers h1 {
+  color: #1E3A8A;
+  margin-bottom: 35px;
+  text-align: center;
+  font-size: 38px;
+}
+
+.mypapers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mypaper-card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: .3s;
+}
+
+.mypaper-card:hover {
+  transform: translateY(-5px);
+}
+
+.mypaper-card h3 {
+  color: #1E3A8A;
+  margin-bottom: 8px;
+}
+
+.mypaper-card p {
+  color: #6B7280;
+}
+
+.mypaper-card span {
+  display: inline-block;
+  margin-top: 10px;
+  background: #EEF4FF;
+  color: #1E3A8A;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.mypaper-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.mypaper-actions button {
+  border: none;
+  background: #1E3A8A;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.mypaper-actions button:hover {
+  background: #1E40AF;
+}
+
+.delete-btn {
+  background: #DC2626 !important;
+}
+
+.delete-btn:hover {
+  background: #B91C1C !important;
+}
+
+@media(max-width:768px) {
+  .paper-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}

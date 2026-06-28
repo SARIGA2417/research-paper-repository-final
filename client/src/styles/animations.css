@@ -1,0 +1,45 @@
+/* Fade In Animation */
+.fade-in{
+    animation:fadeIn .8s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Card Hover */
+.hover-card{
+    transition:all .3s ease;
+}
+
+.hover-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 18px 40px rgba(0,0,0,.15);
+}
+
+/* Button Hover */
+.hover-btn{
+    transition:all .3s ease;
+}
+
+.hover-btn:hover{
+    transform:scale(1.05);
+}
+
+/* Input Focus */
+.input-focus{
+    transition:.3s;
+}
+
+.input-focus:focus{
+    border-color:#1e3a8a;
+    box-shadow:0 0 0 4px rgba(30,58,138,.12);
+}

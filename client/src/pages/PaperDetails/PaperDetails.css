@@ -1,0 +1,389 @@
+.paper-details{
+    min-height:100vh;
+    background:#f8fafc;
+    padding:40px 0 60px;
+}
+
+.back-btn{
+    width:1200px;
+    margin:0 auto 25px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:none;
+    background:none;
+    color:#1e3a8a;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.paper-layout{
+    width:1200px;
+    margin:0 auto;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:30px;
+}
+
+.paper-content{
+    flex:1;
+
+    background:#fff;
+    border-radius:18px;
+    padding:35px;
+    box-shadow:0 8px 25px rgba(15,23,42,.08);
+}
+
+.paper-content h1{
+    font-size:34px;
+    color:#0f172a;
+    line-height:1.3;
+    margin-bottom:10px;
+}
+
+.author{
+    color:#334155;
+    font-size:17px;
+    margin-bottom:10px;
+}
+
+.paper-meta{
+    color:#64748b;
+    margin-bottom:30px;
+}
+
+.paper-stats{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.paper-stats div{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#475569;
+}
+
+.button-row{
+    display:flex;
+    gap:15px;
+    margin-bottom:35px;
+}
+
+.button-row button{
+    padding:12px 22px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:15px;
+    transition:.3s;
+}
+
+.download{
+    background:#1e3a8a;
+    color:white;
+}
+
+.download:hover{
+    background:#1d4ed8;
+}
+
+.save,
+.share{
+    background:white;
+    border:1px solid #cbd5e1;
+}
+
+.tabs{
+    display:flex;
+    gap:35px;
+    border-bottom:1px solid #e2e8f0;
+    margin-bottom:25px;
+}
+
+.tabs button{
+    border:none;
+    background:none;
+    padding-bottom:14px;
+    cursor:pointer;
+    color:#64748b;
+    font-size:15px;
+    font-weight:600;
+}
+
+.tabs button.active{
+    color:#1e3a8a;
+    border-bottom:3px solid #1e3a8a;
+}
+
+.tab-card{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.tab-card h2{
+    color:#0f172a;
+    margin:0;
+}
+
+.tab-card h3{
+    color:#0f172a;
+    margin-top:15px;
+}
+
+.tab-card p{
+    color:#475569;
+    line-height:1.9;
+    text-align:justify;
+}
+/* ================= KEYWORDS ================= */
+
+.keyword-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:5px;
+}
+
+.keyword-list span{
+    background:#eff6ff;
+    color:#1e3a8a;
+    border:1px solid #bfdbfe;
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* ================= REFERENCES ================= */
+
+.paper-list{
+    list-style:none;
+    padding:0;
+    margin:0;
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.paper-list li{
+    padding:18px;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    color:#475569;
+    line-height:1.7;
+    transition:.3s;
+}
+
+.paper-list li:hover{
+    border-color:#1e3a8a;
+    background:#f8fafc;
+}
+
+/* ================= RELATED ================= */
+
+.related-paper{
+    padding:18px;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    transition:.3s;
+    cursor:pointer;
+}
+
+.related-paper:hover{
+    border-color:#1e3a8a;
+    background:#f8fafc;
+}
+
+.related-paper h4{
+    margin-bottom:8px;
+    color:#0f172a;
+}
+
+.related-paper p{
+    margin:0;
+    color:#64748b;
+    text-align:left;
+}
+
+/* ================= RIGHT SIDE ================= */
+
+.sidebar{
+    width:340px;
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.pdf-card,
+.statistics-card,
+.share-card{
+    background:white;
+    border-radius:18px;
+    padding:28px;
+    box-shadow:0 8px 25px rgba(15,23,42,.08);
+}
+
+.pdf-card{
+    text-align:center;
+}
+
+.pdf-icon{
+    font-size:90px;
+    color:#dc2626;
+    margin-bottom:18px;
+}
+
+.preview-btn{
+    width:100%;
+    margin-top:20px;
+    background:#1e3a8a;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.preview-btn:hover{
+    background:#1d4ed8;
+}
+
+/* ================= STATS ================= */
+
+.statistics-card h3{
+    margin-bottom:20px;
+}
+
+.stat-row{
+    display:flex;
+    justify-content:space-between;
+    padding:14px 0;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.stat-row:last-child{
+    border-bottom:none;
+}
+
+.stat-row span{
+    color:#64748b;
+}
+
+.stat-row strong{
+    color:#1e3a8a;
+}
+
+/* ================= SHARE ================= */
+
+.share-card h3{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.share-icons{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+}
+
+.share-icons button{
+    width:48px;
+    height:48px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border:none;
+    border-radius:12px;
+
+    background:#eff6ff;
+    color:#1e3a8a;
+
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.share-icons button:hover{
+    background:#1e3a8a;
+    color:white;
+    transform:translateY(-3px);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1250px){
+
+.paper-layout{
+    width:95%;
+}
+
+.back-btn{
+    width:95%;
+}
+
+}
+
+@media(max-width:992px){
+
+.paper-layout{
+    flex-direction:column;
+}
+
+.paper-content{
+    width:100%;
+}
+
+.sidebar{
+    width:100%;
+}
+
+}
+
+@media(max-width:768px){
+
+.paper-content{
+    padding:25px;
+}
+
+.paper-content h1{
+    font-size:28px;
+}
+
+.paper-stats{
+    flex-direction:column;
+    gap:15px;
+}
+
+.button-row{
+    flex-direction:column;
+}
+
+.button-row button{
+    width:100%;
+    justify-content:center;
+}
+
+.tabs{
+    gap:18px;
+    overflow-x:auto;
+}
+
+.keyword-list{
+    justify-content:center;
+}
+
+}

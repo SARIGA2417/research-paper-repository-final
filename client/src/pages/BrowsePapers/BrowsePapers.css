@@ -1,0 +1,126 @@
+.browse {
+  padding: 80px 8%;
+  background: #F8FAFC;
+  min-height: 100vh;
+}
+
+.browse h1 {
+  text-align: center;
+  color: #1E3A8A;
+  margin-bottom: 40px;
+  font-size: 38px;
+  font-weight: bold;
+}
+
+.search-section {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.search-section input,
+.search-section select {
+  padding: 12px 15px;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  width: 250px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.search-section input:focus,
+.search-section select:focus {
+  border-color: #1E3A8A;
+  box-shadow: 0 0 8px rgba(30, 58, 138, 0.15);
+}
+
+.search-section button {
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.search-section button:hover {
+  background: #1E40AF;
+}
+
+.paper-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.paper-card {
+  background: white;
+  padding: 22px 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: 0.3s;
+}
+
+.paper-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.paper-card h3 {
+  color: #1E3A8A;
+  margin-bottom: 8px;
+  font-size: 22px;
+}
+
+.paper-card p {
+  color: #4B5563;
+  margin-bottom: 6px;
+}
+
+.paper-card span {
+  color: #6B7280;
+  font-size: 14px;
+}
+
+.paper-card button {
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 15px;
+}
+
+.paper-card button:hover {
+  background: #1E40AF;
+}
+
+@media (max-width: 768px) {
+  .paper-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .paper-card button {
+    width: 100%;
+  }
+
+  .search-section input,
+  .search-section select,
+  .search-section button {
+    width: 100%;
+  }
+}
