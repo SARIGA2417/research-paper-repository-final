@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home/Home";
 import BrowsePapers from "./pages/BrowsePapers/BrowsePapers";
 import PaperDetails from "./pages/PaperDetails/PaperDetails";
@@ -17,6 +18,7 @@ import SavedPapers from "./pages/SavedPapers/SavedPapers";
 import DownloadedPapers from "./pages/DownloadedPapers/DownloadedPapers";
 import Notifications from "./pages/Notifications/Notifications";
 import Settings from "./pages/Settings/Settings";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 
 
 function App() {
@@ -26,24 +28,98 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/browse" element={<BrowsePapers />} />
-      <Route path="/paper" element={<PaperDetails />} />
-      <Route path="/upload" element={<UploadPaper />} />
+      <Route path="/paper/:id" element={<PaperDetails />} />
+      
+      <Route
+  path="/upload"
+  element={
+    <ProtectedRoute>
+      <UploadPaper />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/upload/:id"
+  element={
+    <ProtectedRoute>
+      <UploadPaper />
+    </ProtectedRoute>
+  }
+/>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/mypapers" element={<MyPapers />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route
+  path="/dashboard"
+  element={
+    <ProtectedRoute>
+      <Dashboard />
+    </ProtectedRoute>
+  }
+/>
+      <Route
+  path="/mypapers"
+  element={
+    <ProtectedRoute>
+      <MyPapers />
+    </ProtectedRoute>
+  }
+/>
+      <Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFound />} />
-      <Route path="/saved" element={<SavedPapers />} />
-      <Route path="/downloads" element={<DownloadedPapers />} />
-      <Route path="/notifications" element={<Notifications />} />
-      <Route path="/settings" element={<Settings />} />
+     <Route
+  path="/saved"
+  element={
+    <ProtectedRoute>
+      <SavedPapers />
+    </ProtectedRoute>
+  }
+/>
+     <Route
+  path="/downloads"
+  element={
+    <ProtectedRoute>
+      <DownloadedPapers />
+    </ProtectedRoute>
+  }
+/>
+      <Route
+  path="/notifications"
+  element={
+    <ProtectedRoute>
+      <Notifications />
+    </ProtectedRoute>
+  }
+/>
+      <Route
+  path="/settings"
+  element={
+    <ProtectedRoute>
+      <Settings />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/admin"
+  element={
+    <ProtectedRoute>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+/>
       
 
     </Routes>
     </>
+    
   );
 }
 

@@ -1,42 +1,84 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaBookmark,
   FaDownload,
   FaTrash,
-  FaEye
+  FaEye,
 } from "react-icons/fa";
+
+import { toast } from "react-toastify";
+import api from "../../services/api";
 
 import "./SavedPapers.css";
 
 function SavedPapers() {
+  const navigate = useNavigate();
 
-  const papers = [
-    {
-      id: 1,
-      title: "Deep Learning Approaches for Medical Image Analysis",
-      author: "John Smith",
-      department: "Computer Science",
-      saved: "12 Jun 2026"
-    },
-    {
-      id: 2,
-      title: "Artificial Intelligence in Healthcare",
-      author: "Emily Johnson",
-      department: "Artificial Intelligence",
-      saved: "08 Jun 2026"
-    },
-    {
-      id: 3,
-      title: "Cloud Computing for Big Data",
-      author: "Michael Brown",
-      department: "Information Technology",
-      saved: "02 Jun 2026"
+  const [papers, setPapers] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const fetchSavedPapers = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await api.get("/papers/saved", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setPapers(res.data);
+
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+      "Failed to load saved papers"
+    );
+  }
+};
+
+  useEffect(() => {
+  fetchSavedPapers();
+}, []);
+
+  const handleRemove = async (id) => {
+    const confirmRemove = window.confirm(
+      "Remove this paper from Saved Papers?"
+    );
+
+    if (!confirmRemove) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await api.delete(`/papers/save/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success(res.data.message);
+
+      fetchSavedPapers();
+
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to remove paper"
+      );
     }
-  ];
+  };
+
+  const filteredPapers = papers.filter((paper) =>
+    paper.title.toLowerCase().includes(search.toLowerCase()) ||
+    paper.authors.toLowerCase().includes(search.toLowerCase()) ||
+    paper.category.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-
-    <div className="saved-page">
+        <div className="saved-page">
 
       <div className="saved-header">
 
@@ -57,101 +99,109 @@ function SavedPapers() {
           <input
             type="text"
             placeholder="Search saved papers..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
         </div>
-
-        <select>
-
-          <option>All Departments</option>
-
-          <option>Computer Science</option>
-
-          <option>Artificial Intelligence</option>
-
-          <option>Information Technology</option>
-
-        </select>
 
       </div>
 
       <div className="saved-list">
 
-        {papers.map((paper) => (
+        {filteredPapers.length === 0 ? (
 
-          <div
-            className="saved-card"
-            key={paper.id}
-          >
+          <h2>No Saved Papers Found</h2>
 
-            <div className="paper-icon">
+        ) : (
 
-              <FaBookmark />
+          filteredPapers.map((paper) => (
 
-            </div>
+            <div
+              className="saved-card"
+              key={paper._id}
+            >
 
-            <div className="paper-info">
+              <div className="paper-icon">
 
-              <h2>{paper.title}</h2>
+                <FaBookmark />
 
-              <p>
+              </div>
 
-                <strong>Author:</strong> {paper.author}
+              <div className="paper-info">
 
-              </p>
+                <h2>{paper.title}</h2>
 
-              <p>
+                <p>
 
-                <strong>Department:</strong> {paper.department}
+                  <strong>Author:</strong> {paper.authors}
 
-              </p>
+                </p>
 
-              <p>
+                <p>
 
-                <strong>Saved:</strong> {paper.saved}
+                  <strong>Category:</strong> {paper.category}
 
-              </p>
+                </p>
 
-            </div>
+                <p>
+
+                  <strong>Saved:</strong>{" "}
+                  {new Date(
+                    paper.updatedAt
+                  ).toLocaleDateString()}
+
+                </p>
+
+              </div>
 
             <div className="saved-buttons">
 
-              <button className="view-btn">
+  <button
+    className="view-btn"
+    onClick={() =>
+      navigate(`/paper/${paper._id}`)
+    }
+  >
+    <FaEye />
+    View
+  </button>
 
-                <FaEye />
+  <button
+    className="download-btn"
+    onClick={() =>
+      window.open(
+        `http://localhost:5000/api/papers/download/${paper._id}`,
+        "_blank"
+      )
+    }
+  >
+    <FaDownload />
+    Download
+  </button>
 
-                View
+  <button
+    className="remove-btn"
+    onClick={() =>
+      handleRemove(paper._id)
+    }
+  >
+    <FaTrash />
+    Remove
+  </button>
 
-              </button>
+</div> 
 
-              <button className="download-btn">
+      </div>
 
-                <FaDownload />
+          ))
 
-                Download
-
-              </button>
-
-              <button className="remove-btn">
-
-                <FaTrash />
-
-                Remove
-
-              </button>
-
-            </div>
-
-          </div>
-
-        ))}
+        )}
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default SavedPapers;

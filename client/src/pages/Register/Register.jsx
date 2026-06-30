@@ -1,14 +1,57 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import registerImage from "../../assets/images/register-image.jpeg";
 import { toast } from "react-toastify";
+import api from "../../services/api";
 
 function Register() {
 
-    const handleRegister = (e) => {
-  e.preventDefault();
+  const navigate = useNavigate();
 
-  toast.error("Please fill all required fields!");
-};
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    const { name, email, password, confirmPassword } = formData;
+
+    if (!name || !email || !password || !confirmPassword) {
+      return toast.error("Please fill all fields!");
+    }
+
+    if (password !== confirmPassword) {
+      return toast.error("Passwords do not match!");
+    }
+
+    try {
+      const res = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
+
+      toast.success(res.data.message);
+
+      navigate("/login");
+
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Registration Failed"
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-6 py-10">
@@ -39,24 +82,36 @@ function Register() {
 
             <input
               type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
               placeholder="Full Name"
               className="w-full border rounded-xl px-4 py-3"
             />
 
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Email Address"
               className="w-full border rounded-xl px-4 py-3"
             />
 
             <input
               type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Password"
               className="w-full border rounded-xl px-4 py-3"
             />
 
             <input
               type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
               placeholder="Confirm Password"
               className="w-full border rounded-xl px-4 py-3"
             />
@@ -66,7 +121,10 @@ function Register() {
               I agree to the Terms of Service & Privacy Policy
             </label>
 
-            <button className="w-full bg-blue-900 text-white py-3 rounded-xl hover:bg-blue-800">
+            <button
+              type="submit"
+              className="w-full bg-blue-900 text-white py-3 rounded-xl hover:bg-blue-800"
+            >
               Register
             </button>
 

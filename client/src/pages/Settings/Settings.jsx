@@ -1,73 +1,79 @@
+import { useNavigate } from "react-router-dom";
 import {
   FaUserEdit,
   FaLock,
   FaBell,
-  FaMoon,
   FaGlobe,
-  FaSignOutAlt,
-  FaChevronRight
+  FaChevronRight,
 } from "react-icons/fa";
 
 import "./Settings.css";
 
 function Settings() {
+  const navigate = useNavigate();
 
   const settings = [
 
-    {
-      icon:<FaUserEdit />,
-      title:"Edit Profile",
-      description:"Update your personal information."
-    },
+  {
+  icon: <FaUserEdit />,
+  title: "View Profile",
+  description: "View your account information.",
+  action: () => navigate("/profile"),
+},
 
-    {
-      icon:<FaLock />,
-      title:"Change Password",
-      description:"Update your account password."
-    },
+  {
+    icon: <FaLock />,
+    title: "Change Password",
+    description: "Update your account password.",
+    action: () => navigate("/forgot-password"),
+  },
 
-    {
-      icon:<FaBell />,
-      title:"Notification Preferences",
-      description:"Manage email and app notifications."
-    },
+  {
+    icon: <FaBell />,
+    title: "Notification Preferences",
+    description: "View your notifications.",
+    action: () => navigate("/notifications"),
+  },
 
-    {
-      icon:<FaMoon />,
-      title:"Dark Mode",
-      description:"Switch between Light and Dark themes."
-    },
+  {
+    icon: <FaGlobe />,
+    title: "Language",
+    description: "English",
+    action: () => alert("Only English is available."),
+  },
 
-    {
-      icon:<FaGlobe />,
-      title:"Language",
-      description:"Choose your preferred language."
-    }
+];
 
-  ];
-
-  return(
+  return (
 
     <div className="settings-page">
 
       <div className="settings-header">
 
-        <h1>Settings</h1>
+        <h1>
+
+          Settings
+
+        </h1>
 
         <p>
+
           Manage your account preferences.
+
         </p>
 
       </div>
 
       <div className="settings-list">
 
-        {settings.map((item,index)=>(
+        {settings.map((item, index) => (
 
           <div
-            className="setting-card"
-            key={index}
-          >
+  className="setting-card"
+  key={index}
+  onClick={item.action}
+  style={{ cursor: "pointer" }}
+>
 
             <div className="setting-left">
 
@@ -79,29 +85,29 @@ function Settings() {
 
               <div>
 
-                <h3>{item.title}</h3>
+                <h3>
 
-                <p>{item.description}</p>
+                  {item.title}
+
+                </h3>
+
+                <p>
+
+                  {item.description}
+
+                </p>
 
               </div>
 
             </div>
 
-            <FaChevronRight className="arrow"/>
+            <FaChevronRight className="arrow" />
 
           </div>
 
         ))}
 
       </div>
-
-      <button className="logout-btn">
-
-        <FaSignOutAlt />
-
-        Logout
-
-      </button>
 
     </div>
 

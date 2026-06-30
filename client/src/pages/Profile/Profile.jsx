@@ -1,98 +1,196 @@
+import { useEffect, useState } from "react";
 import "./Profile.css";
 
+import api from "../../services/api";
+
 import {
-
-FaUser,
-
-FaEnvelope,
-
-FaUniversity,
-
-FaGraduationCap,
-
-FaUserTie,
-
-FaCalendarAlt
-
+  FaUser,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaUpload,
+  FaBookmark,
+  FaDownload,
 } from "react-icons/fa";
 
 function Profile() {
 
+  const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    role: "",
+    joined: "",
+    uploads: 0,
+    saved: 0,
+    downloads: 0,
+  });
+
+  useEffect(() => {
+
+    const fetchProfile = async () => {
+
+      try {
+
+        const token = localStorage.getItem("token");
+
+        const [myPapers, saved, downloads] =
+          await Promise.all([
+
+            api.get("/papers/mypapers", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+
+            api.get("/papers/saved", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+
+            api.get("/papers/downloads", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+
+          ]);
+
+        const user = JSON.parse(
+          localStorage.getItem("user")
+        );
+
+        setProfile({
+
+          name: user.name,
+
+          email: user.email,
+
+          role: user.role,
+
+          joined: "2026",
+
+          uploads: myPapers.data.length,
+
+          saved: saved.data.length,
+
+          downloads: downloads.data.length,
+
+        });
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    fetchProfile();
+
+  }, []);
+
+
 return (
 
-<section className="profile">
+  <section className="profile">
 
-<div className="profile-container">
+    <div className="profile-container">
 
-<div className="profile-header">
+      <div className="profile-header">
 
-<div className="profile-avatar">
+        <div className="profile-avatar">
 
-<FaUser size={60} color="white"/>
+          <FaUser size={60} color="white" />
 
-</div>
+        </div>
 
-<h2>Sariga</h2>
+        <h2>{profile.name}</h2>
 
-<p>sariga@example.com</p>
+        <p>{profile.email}</p>
 
-</div>
+      </div>
 
-<div className="profile-info">
+      <div className="profile-info">
 
-<div className="info-box">
+        <div className="info-box">
 
-<h4><FaUser /> Full Name</h4>
+          <h4>
 
-<p>Sariga</p>
+            <FaUser /> Full Name
 
-</div>
+          </h4>
 
-<div className="info-box">
+          <p>{profile.name}</p>
 
-<h4><FaEnvelope /> Email</h4>
+        </div>
 
-<p>sariga@example.com</p>
+        <div className="info-box">
 
-</div>
+          <h4>
 
-<div className="info-box">
+            <FaEnvelope /> Email
 
-<h4><FaUniversity /> University</h4>
+          </h4>
 
-<p>ABC University</p>
+          <p>{profile.email}</p>
 
-</div>
+        </div>
 
-<div className="info-box">
+       
 
-<h4><FaGraduationCap /> Department</h4>
+        <div className="info-box">
 
-<p>Information Technologys</p>
+          <h4>
 
-</div>
+            <FaCalendarAlt /> Joined
 
-<div className="info-box">
+          </h4>
 
-<h4><FaUserTie /> Role</h4>
+          <p>{profile.joined}</p>
 
-<p>Researcher</p>
+        </div>
 
-</div>
+        <div className="info-box">
 
-<div className="info-box">
+          <h4>
 
-<h4><FaCalendarAlt /> Joined</h4>
+            <FaUpload /> Total Uploads
 
-<p>January 2026</p>
+          </h4>
 
-</div>
+          <p>{profile.uploads}</p>
 
-</div>
+        </div>
 
-</div>
+        <div className="info-box">
 
-</section>
+          <h4>
+
+            <FaBookmark /> Saved Papers
+
+          </h4>
+
+          <p>{profile.saved}</p>
+
+        </div>
+
+        <div className="info-box">
+
+          <h4>
+
+            <FaDownload /> Downloaded Papers
+
+          </h4>
+
+          <p>{profile.downloads}</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
 
 );
 

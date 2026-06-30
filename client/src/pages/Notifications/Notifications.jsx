@@ -1,51 +1,131 @@
+import { useEffect, useState } from "react";
+
 import {
   FaBell,
   FaCheckCircle,
   FaUpload,
   FaDownload,
   FaBookmark,
-  FaTrash
+  FaTimesCircle,
+  FaTrash,
 } from "react-icons/fa";
+
+import api from "../../services/api";
 
 import "./Notifications.css";
 
 function Notifications() {
 
-  const notifications = [
+  const [notifications, setNotifications] = useState([]);
 
-    {
-      id:1,
-      icon:<FaUpload />,
-      title:"Paper Uploaded Successfully",
-      message:"Your paper 'Deep Learning in Healthcare' has been uploaded.",
-      time:"5 minutes ago"
-    },
+  useEffect(() => {
 
-    {
-      id:2,
-      icon:<FaDownload />,
-      title:"Paper Downloaded",
-      message:"You downloaded 'Artificial Intelligence in Education'.",
-      time:"1 hour ago"
-    },
+    const fetchNotifications = async () => {
 
-    {
-      id:3,
-      icon:<FaBookmark />,
-      title:"Paper Saved",
-      message:"A research paper has been added to your Saved Papers.",
-      time:"Yesterday"
-    },
+      try {
 
-    {
-      id:4,
-      icon:<FaCheckCircle />,
-      title:"Profile Updated",
-      message:"Your profile information has been updated successfully.",
-      time:"2 days ago"
-    }
+        const token = localStorage.getItem("token");
 
-  ];
+        const [myPapers, saved, downloads] =
+          await Promise.all([
+
+            api.get("/papers/mypapers", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+
+            api.get("/papers/saved", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+
+            api.get("/papers/downloads", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }),
+
+          ]);
+
+        let data = [];
+
+        myPapers.data.forEach((paper) => {
+
+          data.push({
+            id: paper._id + "upload",
+            icon: <FaUpload />,
+            title: "Paper Uploaded",
+            message: `${paper.title} has been uploaded.`,
+            time: new Date(
+              paper.createdAt
+            ).toLocaleDateString(),
+          });
+
+          if (paper.status === "Approved") {
+
+            data.push({
+              id: paper._id + "approved",
+              icon: <FaCheckCircle />,
+              title: "Paper Approved",
+              message: `${paper.title} has been approved.`,
+              time: "",
+            });
+
+          }
+
+          if (paper.status === "Rejected") {
+
+            data.push({
+              id: paper._id + "rejected",
+              icon: <FaTimesCircle />,
+              title: "Paper Rejected",
+              message: `${paper.title} has been rejected.`,
+              time: "",
+            });
+
+          }
+
+        });
+
+        saved.data.forEach((paper) => {
+
+          data.push({
+            id: paper._id + "saved",
+            icon: <FaBookmark />,
+            title: "Paper Saved",
+            message: `${paper.title} added to Saved Papers.`,
+            time: "",
+          });
+
+        });
+
+        downloads.data.forEach((paper) => {
+
+          data.push({
+            id: paper._id + "download",
+            icon: <FaDownload />,
+            title: "Paper Downloaded",
+            message: `${paper.title} downloaded.`,
+            time: "",
+          });
+
+        });
+
+        setNotifications(data);
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    fetchNotifications();
+
+  }, []);
 
   return (
 
@@ -73,34 +153,42 @@ function Notifications() {
 
       <div className="notification-list">
 
-        {notifications.map((item)=>(
+  {notifications.length === 0 ? (
 
-          <div
-            className="notification-card"
-            key={item.id}
-          >
+    <h3>No Notifications Yet</h3>
 
-            <div className="notification-icon">
+  ) : (
 
-              {item.icon}
+    notifications.map((item) => (
 
-            </div>
+      <div
+        className="notification-card"
+        key={item.id}
+      >
 
-            <div className="notification-content">
+        <div className="notification-icon">
 
-              <h3>{item.title}</h3>
+          {item.icon}
 
-              <p>{item.message}</p>
+        </div>
 
-              <span>{item.time}</span>
+        <div className="notification-content">
 
-            </div>
+          <h3>{item.title}</h3>
 
-          </div>
+          <p>{item.message}</p>
 
-        ))}
+          <span>{item.time}</span>
+
+        </div>
 
       </div>
+
+    ))
+
+  )}
+
+</div>
 
     </div>
 

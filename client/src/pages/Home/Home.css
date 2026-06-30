@@ -404,3 +404,32 @@
 }
 
 }
+.hero-buttons{
+    display:flex;
+    gap:20px;
+    margin-top:25px;
+}
+
+.login-btn,
+.register-btn{
+    padding:12px 28px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.login-btn{
+.register-btn{
+    background:#2563eb;
+    color:white;
+}
+}
+
+.login-btn:hover{
+    .register-btn:hover{
+    background:#1d4ed8;
+}
+}

@@ -1,7 +1,6 @@
 import { useState } from "react";
-<Link to="/notifications">Notifications</Link>
-import { Link } from "react-router-dom";
-<Link to="/downloads">Downloaded Papers</Link>
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import {
   FaBars,
   FaTimes,
@@ -11,21 +10,35 @@ import {
   FaUpload,
   FaDownload,
   FaUser,
+  FaBookmark,
+  FaBell,
+  FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-<Link to="/settings">Settings</Link>
 
 import "./Navbar.css";
-<Link to="/saved">Saved Papers</Link>
-
-
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
+  const isAuthPage =
+    location.pathname === "/login" ||
+    location.pathname === "/register";
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <>
       <nav className="navbar">
+
         <div
           className="hamburger"
           onClick={() => setMenuOpen(true)}
@@ -34,6 +47,19 @@ function Navbar() {
         </div>
 
         <h2 className="logo">Research Repository</h2>
+
+        {!token && !isAuthPage && (
+          <div className="auth-buttons">
+            <Link to="/login" className="login-btn">
+              Login
+            </Link>
+
+            <Link to="/register" className="register-btn">
+              Register
+            </Link>
+          </div>
+        )}
+
       </nav>
 
       {menuOpen && (
@@ -77,9 +103,9 @@ function Navbar() {
           My Papers
         </Link>
 
-        <Link to="/profile">
-          <FaUser />
-          Profile
+        <Link to="/saved">
+          <FaBookmark />
+          Saved Papers
         </Link>
 
         <Link to="/downloads">
@@ -87,10 +113,30 @@ function Navbar() {
           Downloads
         </Link>
 
-        <Link to="/login">
-          <FaSignOutAlt />
-          Logout
+        <Link to="/notifications">
+          <FaBell />
+          Notifications
         </Link>
+
+        <Link to="/settings">
+          <FaCog />
+          Settings
+        </Link>
+
+        <Link to="/profile">
+          <FaUser />
+          Profile
+        </Link>
+
+        {token && (
+          <button
+            className="logout-btn"
+            onClick={handleLogout}
+          >
+            <FaSignOutAlt />
+            Logout
+          </button>
+        )}
 
       </div>
     </>

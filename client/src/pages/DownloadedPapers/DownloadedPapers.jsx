@@ -1,108 +1,167 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
+  FaSearch,
   FaDownload,
   FaEye,
-  FaFilePdf,
-  FaCalendarAlt
 } from "react-icons/fa";
+
+import { toast } from "react-toastify";
+import api from "../../services/api";
 
 import "./DownloadedPapers.css";
 
 function DownloadedPapers() {
+  const navigate = useNavigate();
 
-  const papers = [
-    {
-      id: 1,
-      title: "Deep Learning Approaches for Medical Image Analysis",
-      author: "John Smith",
-      downloaded: "15 Jun 2026",
-      size: "2.4 MB"
-    },
-    {
-      id: 2,
-      title: "Artificial Intelligence in Healthcare",
-      author: "Emily Johnson",
-      downloaded: "11 Jun 2026",
-      size: "3.1 MB"
-    },
-    {
-      id: 3,
-      title: "Cloud Computing for Big Data",
-      author: "Michael Brown",
-      downloaded: "05 Jun 2026",
-      size: "4.0 MB"
+  const [papers, setPapers] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const fetchDownloadedPapers = async () => {
+    try {
+
+      const token = localStorage.getItem("token");
+
+      const res = await api.get("/papers/downloads", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setPapers(res.data);
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to load downloaded papers"
+      );
+
     }
-  ];
+  };
 
+  useEffect(() => {
+    fetchDownloadedPapers();
+  }, []);
+
+  const filteredPapers = papers.filter((paper) =>
+    paper.title.toLowerCase().includes(search.toLowerCase()) ||
+    paper.authors.toLowerCase().includes(search.toLowerCase()) ||
+    paper.category.toLowerCase().includes(search.toLowerCase())
+  );
   return (
+  <div className="saved-page">
 
-    <div className="downloads-page">
+    <div className="saved-header">
 
-      <div className="downloads-header">
+      <h1>Downloaded Papers</h1>
 
-        <h1>Downloaded Papers</h1>
+      <p>
+        View all research papers you've downloaded.
+      </p>
 
-        <p>
-          Access papers you've downloaded for offline reading.
-        </p>
+    </div>
 
-      </div>
+    <div className="saved-search">
 
-      <div className="downloads-list">
+      <div className="search-box">
 
-        {papers.map((paper) => (
+        <FaSearch />
 
-          <div
-            className="download-card"
-            key={paper.id}
-          >
-
-            <div className="pdf-icon">
-              <FaFilePdf />
-            </div>
-
-            <div className="download-info">
-
-              <h2>{paper.title}</h2>
-
-              <p>
-                <strong>Author:</strong> {paper.author}
-              </p>
-
-              <p>
-                <FaCalendarAlt />
-                Downloaded: {paper.downloaded}
-              </p>
-
-              <p>
-                <strong>File Size:</strong> {paper.size}
-              </p>
-
-            </div>
-
-            <div className="download-actions">
-
-              <button className="view-btn">
-                <FaEye />
-                View
-              </button>
-
-              <button className="download-btn">
-                <FaDownload />
-                Download Again
-              </button>
-
-            </div>
-
-          </div>
-
-        ))}
+        <input
+          type="text"
+          placeholder="Search downloaded papers..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
       </div>
 
     </div>
 
-  );
+    <div className="saved-list">
 
+      {filteredPapers.length === 0 ? (
+
+        <h2>No Downloaded Papers Found</h2>
+
+      ) : (
+
+        filteredPapers.map((paper) => (
+
+          <div
+            className="saved-card"
+            key={paper._id}
+          >
+
+            <div className="paper-icon">
+
+              <FaDownload />
+
+            </div>
+
+            <div className="paper-info">
+
+              <h2>{paper.title}</h2>
+
+              <p>
+
+                <strong>Author:</strong> {paper.authors}
+
+              </p>
+
+              <p>
+
+                <strong>Category:</strong> {paper.category}
+
+              </p>
+
+              <p>
+
+                <strong>Downloaded:</strong>{" "}
+                {new Date(
+                  paper.updatedAt
+                ).toLocaleDateString()}
+
+              </p>
+
+            </div>
+
+            <div className="saved-buttons"><button
+  className="view-btn"
+  onClick={() =>
+    navigate(`/paper/${paper._id}`)
+  }
+>
+  <FaEye />
+  View
+</button>
+
+<button
+  className="download-btn"
+  onClick={() =>
+    window.open(
+      `http://localhost:5000/api/papers/download/${paper._id}`,
+      "_blank"
+    )
+  }
+>
+  <FaDownload />
+  Download Again
+</button>
+
+</div>
+
+</div>
+
+))
+
+)}
+
+</div>
+
+</div>
+);
 }
 
 export default DownloadedPapers;

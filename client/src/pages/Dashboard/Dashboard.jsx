@@ -1,30 +1,105 @@
+import { useEffect, useState } from "react";
 import {
   FaFileAlt,
-  FaUpload,
-  FaDownload,
   FaBookmark,
-  FaChartLine,
+  FaDownload,
+  FaClock,
   FaSearch,
-  FaBell
+  FaBell,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
+import api from "../../services/api";
 
 import "./Dashboard.css";
 
 function Dashboard() {
+  const [stats, setStats] = useState({
+    myPapers: 0,
+    pendingPapers: 0,
+    savedPapers: 0,
+    downloadedPapers: 0,
+  });
+
+  const [recentPapers, setRecentPapers] = useState([]);
+
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+  const fetchDashboard = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const [
+        myPapersRes,
+        savedRes,
+        downloadedRes,
+      ] = await Promise.all([
+        api.get("/papers/mypapers", { headers }),
+        api.get("/papers/saved", { headers }),
+        api.get("/papers/downloads", { headers }),
+      ]);
+
+      const myPapers = myPapersRes.data;
+
+      setRecentPapers(myPapers);
+
+      setStats({
+        myPapers: myPapers.length,
+
+        pendingPapers: myPapers.filter(
+          (paper) => paper.status === "Pending"
+        ).length,
+
+        savedPapers: savedRes.data.length,
+
+        downloadedPapers: downloadedRes.data.length,
+      });
+
+    } catch (error) {
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to load dashboard"
+      );
+    }
+  };
+
+  fetchDashboard();
+
+}, []);
+
+  const filteredPapers = recentPapers.filter(
+    (paper) =>
+      paper.title
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      paper.category
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      paper.authors
+        .toLowerCase()
+        .includes(search.toLowerCase())
+  );
 
   return (
-
     <div className="dashboard">
-
-      {/* Header */}
 
       <div className="dashboard-header">
 
         <div>
 
-          <h1>Dashboard</h1>
+          <h1>User Dashboard</h1>
 
-          <p>Welcome back! Here's what's happening today.</p>
+          <p>
+            Welcome back! Here's a summary of your
+            research activity.
+          </p>
 
         </div>
 
@@ -36,7 +111,11 @@ function Dashboard() {
 
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search my papers..."
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
             />
 
           </div>
@@ -51,8 +130,6 @@ function Dashboard() {
 
       </div>
 
-      {/* Statistics */}
-
       <div className="stats-grid">
 
         <div className="stat-box">
@@ -61,7 +138,7 @@ function Dashboard() {
 
           <div>
 
-            <h2>148</h2>
+            <h2>{stats.myPapers}</h2>
 
             <span>My Papers</span>
 
@@ -71,27 +148,13 @@ function Dashboard() {
 
         <div className="stat-box">
 
-          <FaUpload />
+          <FaClock />
 
           <div>
 
-            <h2>24</h2>
+            <h2>{stats.pendingPapers}</h2>
 
-            <span>Uploads</span>
-
-          </div>
-
-        </div>
-
-        <div className="stat-box">
-
-          <FaDownload />
-
-          <div>
-
-            <h2>1,254</h2>
-
-            <span>Downloads</span>
+            <span>Pending Papers</span>
 
           </div>
 
@@ -103,28 +166,43 @@ function Dashboard() {
 
           <div>
 
-            <h2>67</h2>
+            <h2>{stats.savedPapers}</h2>
 
-            <span>Saved</span>
+            <span>Saved Papers</span>
+
+          </div>
+
+        </div>
+
+        <div className="stat-box">
+
+          <FaDownload />
+
+          <div>
+
+            <h2>{stats.downloadedPapers}</h2>
+
+            <span>Downloaded Papers</span>
 
           </div>
 
         </div>
 
       </div>
-            {/* Main Content */}
 
       <div className="dashboard-content">
-
-        {/* Recent Papers */}
 
         <div className="recent-papers">
 
           <div className="card-header">
 
-            <h2>Recent Papers</h2>
+            <h2>My Recent Papers</h2>
 
-            <button>View All</button>
+            <Link to="/mypapers">
+
+              <button>View All</button>
+
+            </Link>
 
           </div>
 
@@ -134,13 +212,13 @@ function Dashboard() {
 
               <tr>
 
-                <th>Paper Title</th>
+                <th>Title</th>
 
                 <th>Category</th>
 
                 <th>Status</th>
 
-                <th>Downloads</th>
+                <th>Date</th>
 
               </tr>
 
@@ -148,69 +226,48 @@ function Dashboard() {
 
             <tbody>
 
-              <tr>
+              {filteredPapers.length === 0 ? (
+                <tr>
 
-                <td>Deep Learning in Healthcare</td>
+                  <td
+                    colSpan="4"
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    No papers found.
+                  </td>
 
-                <td>Artificial Intelligence</td>
+                </tr>
+              ) : (
+                filteredPapers
+                  .slice(0, 5)
+                  .map((paper) => (
+                                        <tr key={paper._id}>
 
-                <td>
-                  <span className="status published">
-                    Published
-                  </span>
-                </td>
+                      <td>{paper.title}</td>
 
-                <td>542</td>
+                      <td>{paper.category}</td>
 
-              </tr>
+                      <td>
 
-              <tr>
+                        <span
+                          className={`status ${paper.status.toLowerCase()}`}
+                        >
+                          {paper.status}
+                        </span>
 
-                <td>Cloud Computing Security</td>
+                      </td>
 
-                <td>Computer Science</td>
+                      <td>
+                        {new Date(
+                          paper.createdAt
+                        ).toLocaleDateString()}
+                      </td>
 
-                <td>
-                  <span className="status review">
-                    Under Review
-                  </span>
-                </td>
-
-                <td>214</td>
-
-              </tr>
-
-              <tr>
-
-                <td>Machine Learning for Agriculture</td>
-
-                <td>Data Science</td>
-
-                <td>
-                  <span className="status published">
-                    Published
-                  </span>
-                </td>
-
-                <td>864</td>
-
-              </tr>
-
-              <tr>
-
-                <td>Blockchain in Banking</td>
-
-                <td>FinTech</td>
-
-                <td>
-                  <span className="status draft">
-                    Draft
-                  </span>
-                </td>
-
-                <td>—</td>
-
-              </tr>
+                    </tr>
+                  ))
+              )}
 
             </tbody>
 
@@ -218,113 +275,114 @@ function Dashboard() {
 
         </div>
 
-        {/* Right Sidebar */}
-
         <div className="dashboard-right">
-
-          {/* Activity */}
 
           <div className="activity-card">
 
             <div className="card-header">
 
-              <h2>Recent Activity</h2>
+              <h2>Quick Access</h2>
 
             </div>
 
             <div className="activity-list">
 
-              <div className="activity-item">
+              <Link
+                to="/upload"
+                className="activity-item"
+              >
 
-                <FaUpload />
-
-                <div>
-
-                  <h4>Paper Uploaded</h4>
-
-                  <p>2 hours ago</p>
-
-                </div>
-
-              </div>
-
-              <div className="activity-item">
-
-                <FaDownload />
+                <FaFileAlt />
 
                 <div>
 
-                  <h4>Paper Downloaded</h4>
+                  <h4>Upload Paper</h4>
 
-                  <p>Today</p>
+                  <p>Add a new research paper</p>
 
                 </div>
 
-              </div>
+              </Link>
 
-              <div className="activity-item">
+              <Link
+                to="/saved"
+                className="activity-item"
+              >
 
                 <FaBookmark />
 
                 <div>
 
-                  <h4>Paper Saved</h4>
+                  <h4>Saved Papers</h4>
 
-                  <p>Yesterday</p>
+                  <p>
+                    {stats.savedPapers} saved papers
+                  </p>
 
                 </div>
 
-              </div>
+              </Link>
+
+              <Link
+                to="/downloads"
+                className="activity-item"
+              >
+
+                <FaDownload />
+
+                <div>
+
+                  <h4>Downloads</h4>
+
+                  <p>
+                    {stats.downloadedPapers} downloaded
+                  </p>
+
+                </div>
+
+              </Link>
 
             </div>
 
           </div>
 
-          {/* Analytics */}
-
           <div className="analytics-card">
 
             <div className="card-header">
 
-              <h2>
-
-                <FaChartLine />
-
-                Analytics
-
-              </h2>
+              <h2>Statistics</h2>
 
             </div>
 
             <div className="analytics-item">
 
-              <span>Profile Views</span>
+              <span>My Papers</span>
 
-              <strong>3,842</strong>
-
-            </div>
-
-            <div className="analytics-item">
-
-              <span>Total Downloads</span>
-
-              <strong>12,416</strong>
+              <strong>{stats.myPapers}</strong>
 
             </div>
 
             <div className="analytics-item">
 
-              <span>Citations</span>
+              <span>Pending Review</span>
 
-              <strong>284</strong>
+              <strong>{stats.pendingPapers}</strong>
 
             </div>
 
             <div className="analytics-item">
 
-              <span>Followers</span>
+              <span>Saved Papers</span>
 
-              <strong>1,206</strong>
+              <strong>{stats.savedPapers}</strong>
+
+            </div>
+
+            <div className="analytics-item">
+
+              <span>Downloads</span>
+
+              <strong>{stats.downloadedPapers}</strong>
 
             </div>
 
@@ -335,9 +393,7 @@ function Dashboard() {
       </div>
 
     </div>
-
   );
-
 }
 
 export default Dashboard;

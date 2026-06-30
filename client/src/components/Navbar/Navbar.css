@@ -56,6 +56,8 @@
     z-index:1000;
 
     box-shadow:0 10px 25px rgba(0,0,0,.15);
+    overflow-y: auto;
+height: 100vh;
 }
 
 .sidebar.active{
@@ -100,4 +102,106 @@
     color:#1e3a8a;
 
     padding-left:38px;
+}
+.logout-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 20px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.nav-right{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.nav-btn{
+    text-decoration:none;
+    color:white;
+    background:#2563eb;
+    padding:8px 18px;
+    border-radius:6px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.nav-btn:hover{
+    background:#1d4ed8;
+}
+
+.register{
+    background:#16a34a;
+}
+
+.register:hover{
+    background:#15803d;
+}
+
+.logout{
+    border:none;
+    cursor:pointer;
+    color:white;
+    background:#dc2626;
+}
+
+.logout:hover{
+    background:#b91c1c;
+}
+.auth-buttons{
+    display:flex;
+    gap:15px;
+    margin-left:auto;
+    margin-right:25px;
+}
+
+.auth-buttons a{
+    text-decoration:none;
+    padding:8px 18px;
+    border-radius:8px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.login-btn,
+.register-btn{
+    background:#0d6efd;
+    color:white;
+    border:none;
+}
+
+.login-btn:hover,
+.register-btn:hover{
+    background:#084298;
+}
+
+.logout-btn{
+    width:100%;
+    background:#dc3545;
+    color:white;
+    border:none;
+    padding:12px;
+    margin-top:20px;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:16px;
+}
+
+.logout-btn:hover{
+    background:#bb2d3b;
 }

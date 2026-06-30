@@ -1,0 +1,52 @@
+.admin-dashboard{
+    width:90%;
+    margin:40px auto;
+}
+
+.admin-dashboard h1{
+    margin-bottom:25px;
+}
+
+.admin-dashboard table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+.admin-dashboard th,
+.admin-dashboard td{
+    border:1px solid #ddd;
+    padding:14px;
+    text-align:left;
+}
+
+.admin-dashboard th{
+    background:#1976d2;
+    color:white;
+}
+.approve-btn{
+    background:#2e7d32;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    margin-right:10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.reject-btn{
+    background:#d32f2f;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.approve-btn:hover{
+    background:#1b5e20;
+}
+
+.reject-btn:hover{
+    background:#b71c1c;
+}

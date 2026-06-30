@@ -27,6 +27,18 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    savedPapers: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Paper",
+  },
+],
+downloadedPapers: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Paper",
+  },
+],
   },
   {
     timestamps: true,

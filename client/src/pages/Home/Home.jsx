@@ -1,17 +1,81 @@
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaBookOpen,
   FaUsers,
   FaFolderOpen,
-  FaDownload
+  FaDownload,
 } from "react-icons/fa";
+
+import api from "../../services/api";
 
 import heroImage from "../../assets/images/Landing.jpeg";
 import "./Home.css";
 
 function Home() {
+  const navigate = useNavigate();
+
+  const [search, setSearch] = useState("");
+
+  const [loading, setLoading] = useState(true);
+
+  const [homeData, setHomeData] = useState({
+    totalPapers: 0,
+    totalResearchers: 0,
+    recentPapers: [],
+    categories: [],
+  });
+
+  useEffect(() => {
+
+    const fetchHomeData = async () => {
+
+      try {
+
+        const res = await api.get("/papers/home/data");
+
+        setHomeData(res.data);
+        setLoading(false);
+
+      } catch (error) {
+
+  console.log(error);
+
+  setLoading(false);
+
+}
+
+    };
+
+    fetchHomeData();
+
+  }, []);
+
+  if (loading) {
 
   return (
+
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "70vh",
+        fontSize: "24px",
+        fontWeight: "bold",
+        color: "#2563eb",
+      }}
+    >
+
+      Loading...
+
+    </div>
+
+  );
+
+} 
+return (
 
     <div className="home">
 
@@ -36,8 +100,6 @@ function Home() {
 
           </p>
 
-          {/* Search */}
-
           <div className="hero-search">
 
             <div className="search-input">
@@ -46,34 +108,28 @@ function Home() {
 
               <input
                 type="text"
-                placeholder="Search papers by title, author, keywords..."
+                placeholder="Search papers..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
               />
 
             </div>
 
-            <select>
+            <button
+  onClick={() =>
+    navigate(
+      `/browse?search=${encodeURIComponent(search)}`
+    )
+  }
+>
 
-              <option>All Categories</option>
+  Search
 
-              <option>Computer Science</option>
-
-              <option>Engineering</option>
-
-              <option>Medicine</option>
-
-              <option>Data Science</option>
-
-            </select>
-
-            <button>
-
-              Search
-
-            </button>
+</button>
 
           </div>
-
-          {/* Statistics */}
 
           <div className="hero-stats">
 
@@ -83,7 +139,7 @@ function Home() {
 
               <div>
 
-                <h3>125K+</h3>
+                <h3>{homeData.totalPapers}</h3>
 
                 <p>Research Papers</p>
 
@@ -97,7 +153,7 @@ function Home() {
 
               <div>
 
-                <h3>45K+</h3>
+                <h3>{homeData.totalResearchers}</h3>
 
                 <p>Researchers</p>
 
@@ -111,7 +167,7 @@ function Home() {
 
               <div>
 
-                <h3>250+</h3>
+                <h3>{homeData.categories.length}</h3>
 
                 <p>Categories</p>
 
@@ -125,9 +181,9 @@ function Home() {
 
               <div>
 
-                <h3>10M+</h3>
+                <h3>{homeData.totalPapers}</h3>
 
-                <p>Downloads</p>
+                <p>Available PDFs</p>
 
               </div>
 
@@ -136,8 +192,6 @@ function Home() {
           </div>
 
         </div>
-
-        {/* Right Image */}
 
         <div className="hero-right">
 
@@ -149,7 +203,8 @@ function Home() {
         </div>
 
       </section>
-            {/* ---------------- Popular Categories ---------------- */}
+
+      {/* ---------------- Categories ---------------- */}
 
       <section className="categories-section">
 
@@ -157,47 +212,43 @@ function Home() {
 
           <h2>Popular Categories</h2>
 
-          <button>View All Categories</button>
+          <Link to="/browse">
+
+            <button>Browse Papers</button>
+
+          </Link>
 
         </div>
 
         <div className="categories-grid">
+                  {homeData.categories.length === 0 ? (
 
-          <div className="category-card">
-            <div className="category-icon">💻</div>
-            <h3>Computer Science</h3>
-            <p>12,500 Papers</p>
-          </div>
+            <h3>No Categories Available</h3>
 
-          <div className="category-card">
-            <div className="category-icon">⚙️</div>
-            <h3>Engineering</h3>
-            <p>8,200 Papers</p>
-          </div>
+          ) : (
 
-          <div className="category-card">
-            <div className="category-icon">🩺</div>
-            <h3>Medicine</h3>
-            <p>22,400 Papers</p>
-          </div>
+            homeData.categories.map((category) => (
 
-          <div className="category-card">
-            <div className="category-icon">📊</div>
-            <h3>Data Science</h3>
-            <p>15,700 Papers</p>
-          </div>
+              <div
+                className="category-card"
+                key={category._id}
+              >
 
-          <div className="category-card">
-            <div className="category-icon">🤖</div>
-            <h3>Artificial Intelligence</h3>
-            <p>11,900 Papers</p>
-          </div>
+                <div className="category-icon">
 
-          <div className="category-card">
-            <div className="category-icon">🧪</div>
-            <h3>Physics</h3>
-            <p>9,850 Papers</p>
-          </div>
+                  📚
+
+                </div>
+
+                <h3>{category._id}</h3>
+
+                <p>{category.count} Papers</p>
+
+              </div>
+
+            ))
+
+          )}
 
         </div>
 
@@ -209,79 +260,84 @@ function Home() {
 
         <div className="section-header">
 
-          <h2>Recent Research Papers</h2>
+          <h2>Latest Research Papers</h2>
 
-          <button>Browse All</button>
+          <Link to="/browse">
+
+            <button>Browse All</button>
+
+          </Link>
 
         </div>
 
         <div className="paper-grid">
 
-          <div className="paper-card">
+          {homeData.recentPapers.length === 0 ? (
 
-            <span className="paper-tag">AI</span>
+            <h3>No Papers Available</h3>
 
-            <h3>
-              Deep Learning Approaches for Medical Image Analysis
-            </h3>
+          ) : (
 
-            <p>
-              John Smith • 2025
-            </p>
+            homeData.recentPapers
+              .filter((paper) =>
+                paper.title
+                  .toLowerCase()
+                  .includes(search.toLowerCase())
+              )
+              .map((paper) => (
 
-            <div className="paper-footer">
+                <div
+                  className="paper-card"
+                  key={paper._id}
+                >
 
-              <span>1.2K Views</span>
+                  <span className="paper-tag">
 
-              <button>View Paper</button>
+                    {paper.category}
 
-            </div>
+                  </span>
 
-          </div>
+                  <h3>
 
-          <div className="paper-card">
+                    {paper.title}
 
-            <span className="paper-tag">Data Science</span>
+                  </h3>
 
-            <h3>
-              Machine Learning Techniques for Big Data Analytics
-            </h3>
+                  <p>
 
-            <p>
-              Emily Johnson • 2025
-            </p>
+                    {paper.authors}
 
-            <div className="paper-footer">
+                  </p>
 
-              <span>950 Views</span>
+                  <div className="paper-footer">
 
-              <button>View Paper</button>
+                    <span>
 
-            </div>
+                      {new Date(
+                        paper.createdAt
+                      ).toLocaleDateString()}
 
-          </div>
+                    </span>
 
-          <div className="paper-card">
+                    <Link
+                      to={`/paper/${paper._id}`}
+                    >
 
-            <span className="paper-tag">Computer Vision</span>
+                      <button>
 
-            <h3>
-              Image Segmentation Using Convolutional Networks
-            </h3>
+                        View Paper
 
-            <p>
-              Michael Brown • 2024
-            </p>
+                      </button>
 
-            <div className="paper-footer">
+                    </Link>
 
-              <span>2.4K Views</span>
+                  </div>
 
-              <button>View Paper</button>
+                </div>
 
-            </div>
+              ))
 
-          </div>
+          )}
 
         </div>
 
@@ -289,8 +345,10 @@ function Home() {
 
     </div>
 
-  );
+        );
 
 }
 
 export default Home;
+
+        
